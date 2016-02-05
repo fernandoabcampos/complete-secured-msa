@@ -29,9 +29,18 @@ local.properties
 .classpath
 .settings/
 .loadpath
+.recommenders/
+*/target/**
+*/target/*
+/target/
+/*/target/
+/*/*/target/
+target/
+
+.springBeans
 
 # External tool builders
 .externalToolBuilders/
 
-# Locally stored "Eclipse launch configurations"
 *.launch
+

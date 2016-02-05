@@ -4,7 +4,7 @@ import java.io.IOException;
 import java.util.Collection;
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Component;
@@ -41,19 +41,17 @@ public class CardStatementIntegrationService {
 			return object;
 		}
 	}
+	
+	@Autowired
+	private Util utils;
 
 	private RestTemplate rest = new RestTemplate();
 	ObjectMapper mapper = new ObjectMapper();
 
-	@Value("${card.endpoint}")
-	private String cardEndpoint;
-
-	@Value("${extract.endpoint}")
-	private String extractEndpoint;
-
+	
 	public Card getCard(Long cardId) {
 
-		String url = cardEndpoint + "cards/" + cardId;
+		String url = utils.getServiceUrl("cards", "http://localhost:8081/cards").toString() + "cards/" + cardId;
 
 		ResponseEntity<String> cardStr = rest.getForEntity(url, String.class);
 
@@ -70,7 +68,7 @@ public class CardStatementIntegrationService {
 
 	public CardStatement getStatementFromCard(Long cardId) {
 
-		String url = extractEndpoint + "statement?cardId=" + cardId;
+		String url = utils.getServiceUrl("extracts", "http://localhost:8081/statements").toString() + "statement?cardId=" + cardId;
 
 		ResponseEntity<String> statementStr = rest.getForEntity(url, String.class);
 
