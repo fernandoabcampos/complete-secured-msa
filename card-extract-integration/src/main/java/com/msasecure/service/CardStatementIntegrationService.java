@@ -1,6 +1,7 @@
 package com.msasecure.service;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 
@@ -15,6 +16,8 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.msasecure.model.Card;
 import com.msasecure.model.CardStatement;
 import com.msasecure.model.Statement;
+import com.msasecure.model.Statement.StatementType;
+import com.netflix.hystrix.contrib.javanica.annotation.HystrixCommand;
 
 /**
  * @author Fernando Antonio Barbeiro Campos
@@ -53,6 +56,7 @@ public class CardStatementIntegrationService {
 	ObjectMapper mapper = new ObjectMapper();
 
 	
+    @HystrixCommand(fallbackMethod = "defaultCard")
 	public Card getCard(Long cardId) {
 
 		String url = utils.getServiceUrl("cards", "http://localhost:8081/cards").toString() + "cards/" + cardId;
@@ -69,7 +73,8 @@ public class CardStatementIntegrationService {
 
 		return card;
 	}
-
+    
+    @HystrixCommand(fallbackMethod = "defaultStatement")
 	public CardStatement getStatementFromCard(Long cardId) {
 
 		String url = utils.getServiceUrl("extracts", "http://localhost:8081/statements").toString() + "statement?cardId=" + cardId;
@@ -92,5 +97,24 @@ public class CardStatementIntegrationService {
 		return cardStm;
 
 	}
+    
+    // Default card implemented as a fallback method for getCard (in a real world scenario, it could be a cache from specific value
+    public Card defaultCard(){
+    	return new Card("CARDHOLDER NAME DEFAULT", "0000 0000 0000 0001", "2021-11");
+    }
+    
+    public CardStatement defaultStatement(){
+    	
+    	CardStatement defaultCardStatement = new CardStatement(
+    			new Card("CARDHOLDER NAME DEFAULT", "0000 0000 0000 0001", "2021-11"), 
+    			new ArrayList<Statement>(){
+					private static final long serialVersionUID = 1L;
+				{
+    				add(new Statement(1L, 01L, StatementType.CREDIT, "2016-02-01"));
+    			}}
+    			);
+
+    	return defaultCardStatement;
+    }
 
 }
