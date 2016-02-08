@@ -27,6 +27,10 @@ import com.msasecure.model.Statement;
 public class CardStatementIntegrationService {
 
 	public static final class Builder {
+		
+		public Builder() {
+			super();
+		}
 
 		@SuppressWarnings("rawtypes")
 		private ResponseEntity object = null;
