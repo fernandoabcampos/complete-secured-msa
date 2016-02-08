@@ -12,7 +12,7 @@ endpoints:
 zuul:
   ignoredServices: "*"
   routes:
-    productcomposite:
+    card-extract-integration:
       path: /card-extract-integration/**
 #      stripPrefix: false
 
