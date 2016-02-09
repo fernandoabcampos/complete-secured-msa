@@ -99,18 +99,18 @@ public class CardStatementIntegrationService {
 	}
     
     // Default card implemented as a fallback method for getCard (in a real world scenario, it could be a cache from specific value
-    public Card defaultCard(){
+    public Card defaultCard(Long cardId){
     	return new Card("CARDHOLDER NAME DEFAULT", "0000 0000 0000 0001", "2021-11");
     }
     
-    public CardStatement defaultStatement(){
+    public CardStatement defaultStatement(Long cardId){
     	
     	CardStatement defaultCardStatement = new CardStatement(
     			new Card("CARDHOLDER NAME DEFAULT", "0000 0000 0000 0001", "2021-11"), 
     			new ArrayList<Statement>(){
 					private static final long serialVersionUID = 1L;
 				{
-    				add(new Statement(1L, 01L, StatementType.CREDIT, "2016-02-01"));
+    				add(new Statement(cardId, 01L, StatementType.CREDIT, "2016-02-01"));
     			}}
     			);
 

@@ -12,8 +12,8 @@ endpoints:
 server:
   port: 8989
 
-#management:
-  #port: 8990
+management:
+  port: 8990
 
 logging:
   level:
