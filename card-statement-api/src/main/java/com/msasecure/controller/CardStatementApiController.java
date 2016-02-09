@@ -25,11 +25,11 @@ public class CardStatementApiController {
     
     @RequestMapping("/{cardId}")
     @HystrixCommand(fallbackMethod = "defaultProductStatement")
-    public ResponseEntity<String> getProductComposite(@PathVariable int cardId, @RequestHeader(value="Authorization") String authorizationHeader, Principal currentUser) {
+    public ResponseEntity<String> getProductComposite(@PathVariable Long cardId, @RequestHeader(value="Authorization") String authorizationHeader, Principal currentUser) {
 
     	System.out.println("CSApi - User= " + currentUser.getName() + ", Auth= "+authorizationHeader+", called with card= "+cardId);
         URI uri = loadBalancer.choose("card-extract-integration").getUri();
-        String url = uri.toString() + "/product/" + cardId;
+        String url = uri.toString() + "/card-statements?cardId=" + cardId;
 
         ResponseEntity<String> result = restTemplate.getForEntity(url, String.class);
         System.out.println("card-extract-integration http-status: "+ result.getStatusCode());
@@ -38,7 +38,7 @@ public class CardStatementApiController {
         return result;
     }
 
-    public ResponseEntity<String> defaultProductStatement(@PathVariable int cardId, @RequestHeader(value="Authorization") String authorizationHeader, Principal currentUser) {
+    public ResponseEntity<String> defaultProductStatement(@PathVariable Long cardId, @RequestHeader(value="Authorization") String authorizationHeader, Principal currentUser) {
 
     	System.out.println("FALLBACK CSApi - User= " + currentUser.getName() + ", Auth= "+authorizationHeader+", called with card= "+cardId);
         return new ResponseEntity<String>("", HttpStatus.BAD_GATEWAY);
