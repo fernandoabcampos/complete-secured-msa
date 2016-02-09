@@ -11,13 +11,20 @@ endpoints:
 
 zuul:
   ignoredServices: "*"
+  prefix: /api
   routes:
-    card-extract-integration:
-      path: /card-extract-integration/**
-#      stripPrefix: false
+    card-statement-api: /card-state/**
+    #card-extract-integration:
+      #path: /card-extract-integration/**
 
 server:
   port: 8765
+
+security:
+  oauth2:
+    resource:
+      userInfoUri: http://localhost:9999/uaa/user
+
 
 logging:
   level:
